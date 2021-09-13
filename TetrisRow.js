@@ -8,11 +8,11 @@ class TetrisRow {
         return this.row;
     }
 
-    getCell(index) {
+    getCol(index) {
         return this.row[index];
     }
 
-    setCell(index, value) {
+    setCol(index, value) {
         this.row[index] = value;
     }
 

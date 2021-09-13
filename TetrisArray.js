@@ -1,6 +1,5 @@
 class TetrisArray {
-    constructor(width, height, res, margin, colors) {
-        this.colors = colors;
+    constructor(width, height, res, margin) {
         this.width = width;
         this.height = height;
         this.res = res;
@@ -27,6 +26,24 @@ class TetrisArray {
         }
     }
 
+    checkEligibility(positions) {
+        for (let pos of positions) {
+            if (pos[1] >= 0 && pos[1] < this.row_count) {
+                if (this.getRow(pos[1]).getCol(pos[0])) {
+                    return false;
+                }
+            }
+            if (pos[0] < 0 || pos[0] >= this.col_count) {
+                return false;
+            }
+            if (pos[1] >= this.row_count) {
+                return false;
+            }
+
+        }
+        return true;
+    }
+
     show() {
         push();
         noStroke();
@@ -39,7 +56,12 @@ class TetrisArray {
             translate(0, this.res);
             for (let cell of row.getRow()) {
                 translate(this.res, 0);
-                fill(this.colors[cell]);
+                if (!cell) {
+                    fill(50)
+                }
+                else {
+                    fill(cell);
+                }
                 rect(0, 0, this.res, this.res);
             }
         }
