@@ -36,18 +36,15 @@ function setup() {
   stroke(100)
   const colors = { 0: 50, 1: 'purple', 2: 'green' }
   const array = new TetrisArray(width, height, res, margin, colors)
-  array.getRow(2).setCell(2, 2)
-  for (i = 0; i < 9; i++) {
-    array.getRow(5).setCell(i, 1)
-  }
-  array.update()
+  // array.getRow(2).setCell(2, 2)
+  // for (i = 0; i < 9; i++) {
+  //   array.getRow(5).setCell(i, 1)
+  // }
+  // array.update()
   array.show()
-  let iForm = new I(width, height, res, margin, array)
-  iForm.show()
-  iForm.rotate()
-  iForm.show()
-  iForm.rotate()
-  iForm.show()
+  let tetrisI = new TetrisI(width, height, res, margin, array)
+
+  tetrisI.show()
   stroke(255)
   drawGrid(width, height, res, margin)
 

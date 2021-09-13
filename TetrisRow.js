@@ -1,4 +1,4 @@
-class Row {
+class TetrisRow {
     constructor(col_count) {
         this.filled = false;
         this.row = new Array(col_count).fill(0);

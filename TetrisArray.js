@@ -9,7 +9,7 @@ class TetrisArray {
         this.row_count = (height - 2 * margin) / res;
         this.rows = []
         for (let i = 0; i < this.row_count; i++) {
-            this.rows.push(new Row(this.col_count))
+            this.rows.push(new TetrisRow(this.col_count))
         }
     }
 
@@ -22,7 +22,7 @@ class TetrisArray {
             let row = this.rows[i];
             if (row.check()) {
                 this.rows.splice(i, 1)
-                this.rows.unshift(new Row(this.col_count))
+                this.rows.unshift(new TetrisRow(this.col_count))
             }
         }
     }

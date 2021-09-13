@@ -1,19 +1,13 @@
-class I {
+class TetrisStone {
     constructor(width, height, res, margin, array) {
         this.width = width;
         this.height = height;
         this.res = res;
         this.margin = margin;
         this.array = array;
-        this.color = 'yellow';
-        const state_three = [[0, -1], [0, 1], [0, 1], [0, 1]];
-        const state_two = [[-1, 0], [1, 0], [1, 0], [1, 0]];
-        const state_one = [[0, -2], [0, 1], [0, 1], [0, 1]];
-        const state_four = [[-2, 0], [1, 0], [1, 0], [1, 0]]
-        this.states = [state_one, state_two, state_three, state_four];
-        this.state = 0;
         this.col = int(((width - 2 * margin) / res) / 2);
         this.row = 4;
+        this.color = 'white';
     }
 
     rotate() {
@@ -29,7 +23,7 @@ class I {
 
         console.log(this.state)
         for (let pos of this.states[this.state]) {
-            fill(255, 0, 0, 50);
+            fill(this.color);
             translate(pos[0] * this.res, pos[1] * this.res);
             rect(0, 0, this.res, this.res);
         }
