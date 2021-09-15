@@ -30,7 +30,7 @@ function randomStone() {
 const SPACE = 32;
 
 var highscore = 0;
-var poppedRows = 0;
+var popCounter = 0;
 var interval = 1000;
 var lost = false;
 var startMillis;
@@ -121,12 +121,12 @@ function gameLoop() {
     if (popped == 4) {
       highscore += 1000
     }
-    poppedRows += popped;
+    popCounter += popped;
     // make game faster every 10 pops
     if (popped) {
-      if (poppedRows >= 10) {
+      if (popCounter >= 10) {
         interval = (2 * interval) / 3
-        poppedRows -= 10;
+        popCounter -= 10;
       }
     }
 
@@ -144,7 +144,7 @@ function draw() {
   fill('salmon');
   noStroke()
   text(highscore, width - 10, 0)
-  // text(poppedRows, width / 2, 0)
+  // text(popCounter, width / 2, 0)
   // text(interval, 10, 0)
   console.log(interval)
 
