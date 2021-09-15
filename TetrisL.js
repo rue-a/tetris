@@ -5,9 +5,9 @@ class TetrisL extends TetrisStone {
         const state_one = [[0, -1], [0, 1], [0, 1], [1, 0]];
         const state_two = [[0, 1], [0, -1], [1, 0], [1, 0]];
         const state_three = [[0, -1], [1, 0], [0, 1], [0, 1]];
-        const state_four = [[-1, 0], [1, 0], [1, 0], [0, -1]];
+        const state_four = [[-1, 1], [1, 0], [1, 0], [0, -1]];
         this.states = [state_one, state_two, state_three, state_four];
-        // this.state = 0;
-        this.state = Math.floor(Math.random() * 2);
+        this.state = Math.floor(Math.random() * 4);
+        // this.state = 0
     }
 }

@@ -12,18 +12,37 @@ class TetrisArray {
         }
     }
 
+    drawGrid() {
+        stroke(150)
+        let pos;
+        pos = this.margin;
+        while (pos <= this.width - this.margin) {
+            line(pos, this.margin, pos, this.height - this.margin)
+            pos += this.res;
+        }
+
+        pos = this.margin;
+        while (pos <= this.height - this.margin) {
+            line(this.margin, pos, this.width - this.margin, pos)
+            pos += this.res;
+        }
+    }
+
     getRow(index) {
         return this.rows[index];
     }
 
     update() {
+        let poppedRows = 0;
         for (let i in this.rows) {
             let row = this.rows[i];
             if (row.check()) {
                 this.rows.splice(i, 1)
                 this.rows.unshift(new TetrisRow(this.col_count))
+                poppedRows += 1;
             }
         }
+        return poppedRows;
     }
 
     checkEligibility(positions) {
@@ -39,7 +58,6 @@ class TetrisArray {
             if (pos[1] >= this.row_count) {
                 return false;
             }
-
         }
         return true;
     }
