@@ -216,6 +216,7 @@ function draw() {
       if (getResponse['status'] == 'success') {
         const getMsg = getResponse['msg'];
         const lowestHighscore = Object.keys(getMsg['5'])[0]
+        const highscore_div = showLost(score);
         if (score > lowestHighscore) {
           const name = prompt();
           const contender = { 'name': name, 'score': score }
@@ -223,7 +224,7 @@ function draw() {
           postJSON(contender).then(postResponse => {
             if (postResponse['status'] == 'success') {
               const postMsg = postResponse['msg'];
-              const highscore_div = showLost(score);
+
               showHighscore(
                 highscore_div, postMsg['highscore'], postMsg['placement']
               );
@@ -231,7 +232,7 @@ function draw() {
           });
         }
         else {
-          const highscore_div = showLost(score);
+          // const highscore_div = showLost(score);
           showHighscore(highscore_div, getMsg);
         }
       }
