@@ -1,4 +1,19 @@
 
+async function postJSON(data) {
+  const response = await fetch('/api/post', {
+    method: 'POST',
+    headers: {
+      'Content-Type': "application/json"
+    },
+    body: JSON.stringify(data)
+  })
+  return response.json();
+}
+
+async function getJSON() {
+  const response = await fetch('/api/get');
+  return response.json();
+}
 
 function randomStone() {
   let randInt = Math.floor(Math.random() * 7);
@@ -23,40 +38,8 @@ function randomStone() {
   if (randInt == 6) {
     return new TetrisT(width, height, res, margin);
   }
-
-
 }
 
-const SPACE = 32;
-
-var highscore = 0;
-var popCounter = 0;
-var interval = 1000;
-var lost = false;
-var startMillis;
-
-var array;
-var stone;
-const width = 400;
-const height = 720;
-const res = 40;
-const margin = 20;
-
-function setup() {
-  startMillis = millis();
-
-  createCanvas(width, height);
-  background(220);
-  stroke(100)
-
-  array = new TetrisArray(width, height, res, margin)
-  stone = randomStone()
-  // stone = new TetrisT(width, height, res, margin);
-
-  array.show()
-  stone.show()
-  array.drawGrid()
-}
 
 function keyPressed() {
   if (!(lost)) {
@@ -110,16 +93,16 @@ function gameLoop() {
     background(220)
     let popped = array.update();
     if (popped == 1) {
-      highscore += 200
+      score += 200
     }
     if (popped == 2) {
-      highscore += 300
+      score += 300
     }
     if (popped == 3) {
-      highscore += 500
+      score += 500
     }
     if (popped == 4) {
-      highscore += 1000
+      score += 1000
     }
     popCounter += popped;
     // make game faster every 10 pops
@@ -138,19 +121,60 @@ function gameLoop() {
   return true;
 }
 
+function jsonToTable(data) {
+  let lines = []
+  for (let key of Object.keys(data)) {
+    let score = (Object.keys(data[key]))[0];
+
+    lines.push(data[key][score] + ' : ' + score + '\n');
+  }
+  return lines;
+}
+
+const SPACE = 32;
+
+var score = 0;
+var popCounter = 0;
+var interval = 1000;
+var lost = false;
+var startMillis;
+
+var array;
+var stone;
+const width = 400;
+const height = 720;
+const res = 40;
+const margin = 20;
+
+function setup() {
+  startMillis = millis();
+
+  createCanvas(width, height);
+  background(220);
+  stroke(100)
+
+  array = new TetrisArray(width, height, res, margin)
+  stone = randomStone()
+  // stone = new TetrisT(width, height, res, margin);
+
+  array.show()
+  stone.show()
+  array.drawGrid()
+}
+
 function draw() {
   textSize(18);
   textAlign(RIGHT, TOP);
-  fill('salmon');
+  fill('white');
   noStroke()
-  text(highscore, width - 10, 0)
+  text(score, width - 10, 0)
   // text(popCounter, width / 2, 0)
   // text(interval, 10, 0)
   console.log(interval)
 
 
   if (!(gameLoop())) {
-
+    noLoop();
     array.update();
     array.show();
     background(0, 0, 0, 30);
@@ -158,10 +182,45 @@ function draw() {
     textSize(64);
     noStroke();
     fill('white');
-    text('YOU LOST!', width / 2, height / 2);
-    textSize(16)
-    text('Your Highscore is: ' + highscore, width / 2 + 40, height / 2 + 40);
-
+    text('YOU LOST!', width / 2, height / 3);
+    textSize(20)
+    text('Your score is ' + score + '!', width / 2, height / 3 + 35);
+    getJSON().then(getResponse => {
+      // console.log(getResponse)
+      if (getResponse['status'] == 'success') {
+        const getMsg = getResponse['msg'];
+        const lowestHighscore = Object.keys(getMsg['5'])[0]
+        if (score > lowestHighscore) {
+          const contender = { 'name': 'player', 'score': score }
+          postJSON(contender).then(postResponse => {
+            // console.log(postResponse);
+            if (postResponse['status'] == 'success') {
+              const postMsg = postResponse['msg'];
+              const table = jsonToTable(postMsg['highscore']);
+              textAlign(CENTER, CENTER);
+              textSize(16)
+              for (let index in table) {
+                if (index == postMsg['placement'] - 1) {
+                  fill('salmon');
+                  text(table[index], (width / 2), (height / 2) + (20 * index));
+                }
+                else {
+                  fill('white');
+                  text(table[index], (width / 2), (height / 2) + (20 * index));
+                }
+              }
+            }
+          });
+        }
+        else {
+          const table = jsonToTable(getMsg)
+          textAlign(CENTER, CENTER);
+          textSize(16)
+          for (let index in table) {
+            text(table[index], (width / 2), (height / 2) + (20 * index));
+          }
+        }
+      }
+    })
   }
-
 }

@@ -3,6 +3,9 @@ const fs = require('fs');
 
 const app = express();
 app.listen(3000, () => console.log('listening at port 3000'));
+app.use(express.static('public'));
+app.use(express.json())
+
 
 
 // read and write files in node tutorial:
@@ -17,27 +20,46 @@ function writeJSON(path, json_string) {
     fs.writeFileSync(path, json_string);
 }
 
-// highscore = readJSON('private/highscore.json')
+
 // highscore['microsoft sam'] = 999;
 // highscore['jutta'] = 54
 // writeJSON('private/highscore.json', JSON.stringify(highscore))
 
 
+function updateHighscore(highscore, contender) {
+    // keys are automatically sorted
+    for (placement of Object.keys(highscore)) {
+        if (contender['score'] > Object.keys(highscore[placement])[0]) {
+            let new_placement = {}
+            new_placement[contender['score']] = contender['name'];
+            highscore[placement] = new_placement;
+            return { 'placement': placement, 'highscore': highscore };
+        }
+    }
+    return { 'placement': null, 'highscore': highscore };
+}
 
-
-app.use(express.static('public'));
-
-// accept text from post
-// https://expressjs.com/en/4x/api.html#express.text
-app.use(express.text())
-
+// GET method route
+app.get('/api/get', (request, response) => {
+    console.log('GET request received')
+    const path = 'private/highscore.json';
+    const highscore = readJSON(path);
+    response.json({
+        status: 'success',
+        msg: highscore
+    })
+});
 
 // POST method route
 app.post('/api/post', (request, response) => {
     console.log('POST request received')
-    console.log(request.body);
+    const contender = request.body
+    const path = 'private/highscore.json';
+    const highscore = readJSON(path);
+    const updates = updateHighscore(highscore, contender);
+    writeJSON(path, JSON.stringify(updates['highscore']));
     response.json({
         status: 'success',
-        msg: 'POST request response.'
+        msg: updates
     })
 });

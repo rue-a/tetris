@@ -1,7 +1,17 @@
 {
-    "jutta": 10000,
-    "microsoft sam": 1000,
-    "siri": 800,
-    "cortana": 700,
-    "alexa": 600
+    "1": {
+        "10000": "jutta"
+    },
+    "2": {
+        "1000": "microsoft sam"
+    },
+    "3": {
+        "800": "siri"
+    },
+    "4": {
+        "700": "cortana"
+    },
+    "5": {
+        "600": "alexa"
+    }
 }
