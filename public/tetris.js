@@ -139,6 +139,19 @@ function showHighscore(div, highscore, playerPlacement = null) {
   }
 }
 
+function showLost(score) {
+  const div = createElement('div', '')
+  div.addClass('highscore')
+  div.position(40, height / 3)
+  const lost_html = createElement('p', 'YOU LOST!')
+  lost_html.parent(div)
+  lost_html.addClass('lost tetris-text')
+  const score_html = createElement('p', 'Your score is ' + score + '.')
+  score_html.parent(div)
+  score_html.addClass('score tetris-text')
+  return div;
+}
+
 
 
 const SPACE = 32;
@@ -196,15 +209,7 @@ function draw() {
     textSize(64);
     noStroke();
 
-    const highscore_div = createElement('div', '')
-    highscore_div.addClass('highscore')
-    highscore_div.position(40, height / 3)
-    const lost_html = createElement('p', 'YOU LOST!')
-    lost_html.parent(highscore_div)
-    lost_html.addClass('lost tetris-text')
-    const score_html = createElement('p', 'Your score is ' + score + '.')
-    score_html.parent(highscore_div)
-    score_html.addClass('score tetris-text')
+
 
     getJSON().then(getResponse => {
       // console.log(getResponse)
@@ -214,9 +219,11 @@ function draw() {
         if (score > lowestHighscore) {
           const name = prompt();
           const contender = { 'name': name, 'score': score }
+
           postJSON(contender).then(postResponse => {
             if (postResponse['status'] == 'success') {
               const postMsg = postResponse['msg'];
+              const highscore_div = showLost(score);
               showHighscore(
                 highscore_div, postMsg['highscore'], postMsg['placement']
               );
@@ -224,6 +231,7 @@ function draw() {
           });
         }
         else {
+          const highscore_div = showLost(score);
           showHighscore(highscore_div, getMsg);
         }
       }
