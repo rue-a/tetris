@@ -96,13 +96,13 @@ function gameLoop() {
       score += 200
     }
     if (popped == 2) {
-      score += 300
-    }
-    if (popped == 3) {
       score += 500
     }
+    if (popped == 3) {
+      score += 900
+    }
     if (popped == 4) {
-      score += 1000
+      score += 1300
     }
     popCounter += popped;
     // make game faster every 10 pops
