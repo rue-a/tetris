@@ -22,11 +22,6 @@ function writeJSON(path, json_string) {
 }
 
 
-// highscore['microsoft sam'] = 999;
-// highscore['jutta'] = 54
-// writeJSON('private/highscore.json', JSON.stringify(highscore))
-
-
 function updateHighscore(highscore, contender) {
     // keys are automatically sorted
     for (placement of Object.keys(highscore)) {
