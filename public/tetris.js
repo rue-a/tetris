@@ -121,15 +121,25 @@ function gameLoop() {
   return true;
 }
 
-function jsonToTable(data) {
-  let lines = []
-  for (let key of Object.keys(data)) {
-    let score = (Object.keys(data[key]))[0];
-
-    lines.push(data[key][score] + ' : ' + score + '\n');
+function showHighscore(div, highscore, playerPlacement = null) {
+  const highscoreLines = []
+  for (let key of Object.keys(highscore)) {
+    const score = Object.keys(highscore[key])[0];
+    highscoreLines.push([highscore[key][score], score]);
   }
-  return lines;
+
+  for (let placement_index in highscoreLines) {
+    const placement = highscoreLines[placement_index]
+    const placement_text = createElement('p', placement[0] + ' : ' + placement[1]);
+    placement_text.parent(div);
+    placement_text.addClass('tetris-text');
+    if (placement_index == playerPlacement - 1) {
+      placement_text.addClass('current-placement')
+    }
+  }
 }
+
+
 
 const SPACE = 32;
 
@@ -139,6 +149,7 @@ var interval = 1000;
 var lost = false;
 var startMillis;
 
+var canvas;
 var array;
 var stone;
 const width = 400;
@@ -146,10 +157,12 @@ const height = 720;
 const res = 40;
 const margin = 20;
 
+
+
 function setup() {
   startMillis = millis();
 
-  createCanvas(width, height);
+  canvas = createCanvas(width, height);
   background(220);
   stroke(100)
 
@@ -174,6 +187,7 @@ function draw() {
 
 
   if (!(gameLoop())) {
+    // if (true) {
     noLoop();
     array.update();
     array.show();
@@ -181,44 +195,36 @@ function draw() {
     textAlign(CENTER, CENTER);
     textSize(64);
     noStroke();
-    fill('white');
-    text('YOU LOST!', width / 2, height / 3);
-    textSize(20)
-    text('Your score is ' + score + '!', width / 2, height / 3 + 35);
+
+    const highscore_div = createElement('div', '')
+    highscore_div.addClass('highscore')
+    highscore_div.position(40, height / 3)
+    const lost_html = createElement('p', 'YOU LOST!')
+    lost_html.parent(highscore_div)
+    lost_html.addClass('lost tetris-text')
+    const score_html = createElement('p', 'Your score is ' + score + '.')
+    score_html.parent(highscore_div)
+    score_html.addClass('score tetris-text')
+
     getJSON().then(getResponse => {
       // console.log(getResponse)
       if (getResponse['status'] == 'success') {
         const getMsg = getResponse['msg'];
         const lowestHighscore = Object.keys(getMsg['5'])[0]
         if (score > lowestHighscore) {
-          const contender = { 'name': 'player', 'score': score }
+          const name = prompt();
+          const contender = { 'name': name, 'score': score }
           postJSON(contender).then(postResponse => {
-            // console.log(postResponse);
             if (postResponse['status'] == 'success') {
               const postMsg = postResponse['msg'];
-              const table = jsonToTable(postMsg['highscore']);
-              textAlign(CENTER, CENTER);
-              textSize(16)
-              for (let index in table) {
-                if (index == postMsg['placement'] - 1) {
-                  fill('salmon');
-                  text(table[index], (width / 2), (height / 2) + (20 * index));
-                }
-                else {
-                  fill('white');
-                  text(table[index], (width / 2), (height / 2) + (20 * index));
-                }
-              }
+              showHighscore(
+                highscore_div, postMsg['highscore'], postMsg['placement']
+              );
             }
           });
         }
         else {
-          const table = jsonToTable(getMsg)
-          textAlign(CENTER, CENTER);
-          textSize(16)
-          for (let index in table) {
-            text(table[index], (width / 2), (height / 2) + (20 * index));
-          }
+          showHighscore(highscore_div, getMsg);
         }
       }
     })
