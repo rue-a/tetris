@@ -145,10 +145,10 @@ function showLost(score) {
   div.position(40, height / 3)
   const lost_html = createElement('p', 'YOU LOST!')
   lost_html.parent(div)
-  lost_html.addClass('lost tetris-text')
+  lost_html.addClass('tetris-text lost')
   const score_html = createElement('p', 'Your score is ' + score + '.')
   score_html.parent(div)
-  score_html.addClass('score tetris-text')
+  score_html.addClass('tetris-text score')
   return div;
 }
 
