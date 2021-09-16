@@ -145,12 +145,10 @@ function showLost(score) {
   div.position(40, height / 3)
   const lost_html = createElement('p', 'YOU LOST!')
   lost_html.parent(div)
-  lost_html.addClass('tetris-text')
-  // lost_html.addClass('lost')
+  lost_html.addClass('lost tetris-text')
   const score_html = createElement('p', 'Your score is ' + score + '.')
   score_html.parent(div)
-  score_html.addClass('tetris-text')
-  // score_html.addClass('score')
+  score_html.addClass('score tetris-text')
   return div;
 }
 
@@ -212,9 +210,10 @@ function draw() {
     noStroke();
 
 
-    const highscore_div = showLost(score);
+
     getJSON().then(getResponse => {
       // console.log(getResponse)
+      const highscore_div = showLost(score);
       if (getResponse['status'] == 'success') {
         const getMsg = getResponse['msg'];
         const lowestHighscore = Object.keys(getMsg['5'])[0]

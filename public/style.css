@@ -33,10 +33,10 @@ canvas {
   
 .lost {
   margin: 0;
-  font-size: 64px;  
+  font-size: 24px;  
 }
 
 .score {
   margin: 0;
-  font-size: 24px;
+  font-size: 20px;
 }
