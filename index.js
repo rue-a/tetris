@@ -2,8 +2,8 @@ const express = require('express');
 const fs = require('fs');
 
 const app = express();
-const pot = process.env.PORT
-app.listen(port, () => console.log('listening at port 3000'));
+const port = process.env.PORT || 3000;
+app.listen(port, () => console.log(`listening at port ${port}`));
 app.use(express.static('public'));
 app.use(express.json())
 
